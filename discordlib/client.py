@@ -11,7 +11,7 @@ from discord.ext.commands import (
 )
 
 
-def build_bot_from_config(config):
+def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
 
     def get_prefix(bot, msg):
@@ -57,7 +57,7 @@ def create_command(command_config: Dict) -> Command:
 
 
 class Client:
-    def __init__(self, bot_data):
+    def __init__(self, bot_data: Dict):
         self.bot_data = bot_data
         self.config = self.bot_data.get("config")
         self.commands = self.bot_data.get("config")
