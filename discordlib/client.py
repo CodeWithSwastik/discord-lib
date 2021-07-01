@@ -11,9 +11,10 @@ def build_bot_from_config(config):
     def get_prefix(bot, msg):
         prefixes = config.get("prefixes")
         if prefixes:
-            if "{{when_mentioned}}" in prefixes:
+            mentioned = "{{when_mentioned}}"
+            if mentioned in prefixes:
                 return when_mentioned_or(
-                    *(set(prefixes) - {"{{when_mentioned}}"})
+                    *(set(prefixes) - {mentioned})
                 )(bot, msg)
             else:
                 return prefixes
