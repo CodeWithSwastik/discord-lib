@@ -1,8 +1,8 @@
 {
   "config": {
-    "token": "TOKEN",
-    "prefixes": ["{{mention}}", "?"],
-    "caseSensitive": false,
+    "token": "",
+    "prefixes": ["{{when_mentioned}}", ">"],
+    "case_sensitive": false,
     "owner": 556119013298667520
   },
   "commands": [
