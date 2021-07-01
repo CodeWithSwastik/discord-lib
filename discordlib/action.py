@@ -1,6 +1,5 @@
 import re
 
-
 class Action:
     def __init__(self, action_config, namespace=None):
         self.action_config = action_config

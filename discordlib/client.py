@@ -77,6 +77,9 @@ def create_command(command_config: Dict) -> Command:
 
     async def command(ctx: Context, *args):
         for i, arg in enumerate(defined_args):
+            if arg.startswith('*'):
+                setattr(ctx, arg[1:], ' '.join(args[i:]))
+                break
             setattr(ctx, arg, args[i])
 
         if action := command_config.get("action"):

@@ -39,8 +39,16 @@
     },
     {
       "name": "repeat",
-      "args": ["num1"],
-      "response": "{{num1}}"
+      "args": ["*lol"],
+      "response": "{{lol}}"
+    },
+    {
+      "name": "test",
+      "args": ["lol"],
+      "action": {
+        "type": "math",
+        "value": "{{lol}}"
+      }
     }
   ]
 }
