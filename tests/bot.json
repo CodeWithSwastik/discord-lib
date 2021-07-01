@@ -5,6 +5,15 @@
     "case_sensitive": false,
     "owner": 556119013298667520
   },
+  "events": [
+    {
+      "name": "on_ready",
+      "action": {
+        "type": "log",
+        "value": "Bot is ready"
+      }
+    }
+  ],
   "commands": [
     {
       "name": "ping",
