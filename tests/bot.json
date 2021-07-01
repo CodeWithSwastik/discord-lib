@@ -26,7 +26,21 @@
     {
       "name": "hi",
       "aliases": ["hello", "info"],
-      "response": "Hi I am a bot that was made in discord.json {{author.mention}}"
+      "response": "Hi, {{author.mention}} I am a bot that was made in discord.json (powered by discord-lib)"
+    },
+    {
+      "name": "test",
+      "action": {
+        "type": "store",
+        "name": "result",
+        "data": {
+          "type": "conditional",
+          "condition": "1>2",
+          "true": "It was true",
+          "false": "It was false"
+        }
+      },
+      "response": "Test {{result}}"
     }
   ]
 }

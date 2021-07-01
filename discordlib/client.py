@@ -10,6 +10,7 @@ from discord.ext.commands import (
     when_mentioned_or,
 )
 
+from .action import Action
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -61,12 +62,15 @@ def add_commands(bot: Bot, command_configs: List[Dict]):
 
 def create_command(command_config: Dict) -> Command:
     async def command(ctx: Context):
+        if action := command_config.get("action"):
+            Action(action, namespace=ctx).execute()
 
-        if command_config.get("response"):
-            response = matcher.sub(replacer, command_config["response"])
+
+        if resp := command_config.get("response"):
+            response = matcher.sub(replacer, resp)
             await ctx.send(response.format(ctx))
-        if command_config.get("reply"):
-            reply = matcher.sub(replacer, command_config.get("reply"))
+        if rep := command_config.get("reply"):
+            reply = matcher.sub(replacer, rep)
             await ctx.reply(reply.format(ctx))
 
     return Command(
@@ -82,8 +86,7 @@ def add_listeners(bot: Bot, event_configs: List[Dict]):
 def create_event(event_config: Dict):
     async def event(*args, **kwargs):
         if action := event_config.get("action"):
-            if action["type"] == "log":
-                print(action["value"])
+            Action(action).execute()
 
     return (event, event_config["name"])
 
