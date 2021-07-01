@@ -15,7 +15,7 @@ def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
 
     def get_prefix(bot, msg):
-        prefixes = config.get("prefixes")
+        prefixes = [config.get("prefix")] or config.get("prefixes")
         if prefixes:
             mentioned = "{{when_mentioned}}"
             if mentioned in prefixes:
@@ -46,10 +46,14 @@ def add_commands(bot: Bot, command_configs: List[Dict]):
 
 
 def create_command(command_config: Dict) -> Command:
-    response = matcher.sub(replacer, command_config["response"])
-
     async def command(ctx: Context):
-        await ctx.send(response.format(ctx))
+
+        if command_config.get("response"):
+            response = matcher.sub(replacer, command_config["response"])
+            await ctx.send(response.format(ctx))
+        if command_config.get("reply"):
+            reply = matcher.sub(replacer, command_config.get("reply"))
+            await ctx.reply(reply.format(ctx))
 
     return Command(
         command, name=command_config["name"], aliases=command_config.get("aliases", [])

@@ -17,7 +17,12 @@
   "commands": [
     {
       "name": "ping",
-      "response": "Pong! {{bot.latency}}ms"
+      "reply": "Pong! {{bot.latency}}ms"
+    },
+    {
+      "name": "hi",
+      "aliases": ["hello", "info"],
+      "response": "Hi I am a bot that was made in discord.json {{author.mention}}"
     }
   ]
 }
