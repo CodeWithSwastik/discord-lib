@@ -1,0 +1,14 @@
+{
+  "config": {
+    "token": "TOKEN",
+    "prefixes": ["{{mention}}", "?"],
+    "caseSensitive": false,
+    "owner": 556119013298667520
+  },
+  "commands": [
+    {
+      "name": "ping",
+      "response": "Pong! {{bot.latency}}"
+    }
+  ]
+}

@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
-  <config>
-    <token>YOUR_TOKEN_HERE</token>
-    <helpCommand>
-      <name>help</name>
-      <aliases>h</aliases>
-      <aliases>commands</aliases>
-      <color>#33ff69</color>
-      <title>Help</title>
-      <notFound>
-        <message>Command or category {{name}} not found.</message>
-      </notFound>
-    </helpCommand>
-    <prefixes>{{mention}}</prefixes>
-    <prefixes>?</prefixes>
-    <caseSensitive>false</caseSensitive>
-    <owner>556119013298667520</owner>
-    <readyMessage>I'm ready!</readyMessage>
-    <ignoreDMs>true</ignoreDMs>
-    <ignoreBots>true</ignoreBots>
-    <welcomeMessage>
-      <content>Welcome to {{servername}}, {{username}}! The server now has {{membercount}} members</content>
-      <channel>welcome</channel>
-    </welcomeMessage>
-    <leaveMessage>
-      <content>Why though {{username}} :(</content>
-      <channel>goodbye</channel>
-    </leaveMessage>
-    <logErrors>true</logErrors>
-    <errorMessage>There was an error running that command.</errorMessage>
-    <noPermissionsMessage>You don't have permission to do that.</noPermissionsMessage>
-  </config>
-  <commands>
-    <name>ping</name>
-    <aliases>pong</aliases>
-    <response>Pong!</response>
-    <type>all</type>
-    <description>Replies "Pong!"</description>
-    </commands>
+    <config>
+        <token>YOUR_TOKEN_HERE</token>
+        <helpCommand>
+            <name>help</name>
+            <aliases>h</aliases>
+            <aliases>commands</aliases>
+            <color>#33ff69</color>
+            <title>Help</title>
+            <notFound>
+                <message>Command or category {{name}} not found.</message>
+            </notFound>
+        </helpCommand>
+        <prefixes>{{mention}}</prefixes>
+        <prefixes>?</prefixes>
+        <caseSensitive>false</caseSensitive>
+        <owner>556119013298667520</owner>
+        <readyMessage>I'm ready!</readyMessage>
+        <ignoreDMs>true</ignoreDMs>
+        <ignoreBots>true</ignoreBots>
+        <welcomeMessage>
+        <content>Welcome to {{servername}}, {{username}}! The server now has {{membercount}} members</content>
+        <channel>welcome</channel>
+        </welcomeMessage>
+        <leaveMessage>
+        <content>Why though {{username}} :(</content>
+        <channel>goodbye</channel>
+        </leaveMessage>
+        <logErrors>true</logErrors>
+        <errorMessage>There was an error running that command.</errorMessage>
+        <noPermissionsMessage>You don't have permission to do that.</noPermissionsMessage>
+    </config>
     <commands>
-    <name>best-framework</name>
-    <response>Discord.XML</response>
-    <type>all</type>
-    <description>Tells you the best framework: Discord.XML</description>
+        <command>
+            <name>ping</name>
+            <aliases>pong</aliases>
+            <response>Pong!</response>
+            <type>all</type>
+            <description>Replies "Pong!"</description>
+        </command>
+        <command>
+            <name>best-framework</name>
+            <response>Discord.XML</response>
+            <type>all</type>
+            <description>Tells you the best framework: Discord.XML</description>
+        </command>
     </commands>
 </root>
