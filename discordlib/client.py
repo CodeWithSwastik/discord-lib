@@ -1,7 +1,8 @@
-import json
+import re
+from typing import Dict, List
 
 from discord import Intents
-from discord.ext import commands
+from discord.ext.commands import Bot, Command, Context, when_mentioned, when_mentioned_or 
 
 
 def build_bot_from_config(config):
@@ -11,13 +12,13 @@ def build_bot_from_config(config):
         prefixes = config.get("prefixes")
         if prefixes:
             if "{{when_mentioned}}" in prefixes:
-                return commands.when_mentioned_or(
+                return when_mentioned_or(
                     *(set(prefixes) - {"{{when_mentioned}}"})
                 )(bot, msg)
             else:
                 return prefixes
         else:
-            return commands.when_mentioned(bot, msg)
+            return when_mentioned(bot, msg)
 
     new_config["command_prefix"] = get_prefix
     new_config["owner_id"] = config.get("owner")
@@ -27,24 +28,7 @@ def build_bot_from_config(config):
         Intents.all() if config.get("intents") == "all" else Intents.default()
     )
 
-    return commands.Bot(**new_config)
-
-
-class Client:
-    def __init__(self, bot_data):
-        self.bot_data = bot_data
-        self.config = self.bot_data.get("config")
-        self.bot = build_bot_from_config(self.config)
-        add_commands(self.bot, bot_data["commands"])
-
-    def run(self):
-        self.bot.run(self.config["token"])
-
-
-import re
-from typing import Dict, List
-
-from discord.ext.commands import Bot, Command, Context
+    return Bot(**new_config)
 
 matcher = re.compile(r"(?:\{\{)([a-zA-Z\.]+)(?:\}\})")
 replacer = "{0.\\1}"
@@ -64,3 +48,19 @@ def create_command(command_config: Dict) -> Command:
     return Command(
         command, name=command_config["name"], aliases=command_config.get("aliases", [])
     )
+
+
+class Client:
+    def __init__(self, bot_data):
+        self.bot_data = bot_data
+        self.config = self.bot_data.get("config")
+        self.commands = self.bot_data.get("config")
+        self.bot = build_bot_from_config(self.config)
+        add_commands(self.bot, self.commands)
+
+    def run(self):
+        self.bot.run(self.config["token"])
+
+
+
+
