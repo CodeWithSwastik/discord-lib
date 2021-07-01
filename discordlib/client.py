@@ -2,7 +2,13 @@ import re
 from typing import Dict, List
 
 from discord import Intents
-from discord.ext.commands import Bot, Command, Context, when_mentioned, when_mentioned_or 
+from discord.ext.commands import (
+    Bot,
+    Command,
+    Context,
+    when_mentioned,
+    when_mentioned_or,
+)
 
 
 def build_bot_from_config(config):
@@ -13,9 +19,7 @@ def build_bot_from_config(config):
         if prefixes:
             mentioned = "{{when_mentioned}}"
             if mentioned in prefixes:
-                return when_mentioned_or(
-                    *(set(prefixes) - {mentioned})
-                )(bot, msg)
+                return when_mentioned_or(*(set(prefixes) - {mentioned}))(bot, msg)
             else:
                 return prefixes
         else:
@@ -30,6 +34,7 @@ def build_bot_from_config(config):
     )
 
     return Bot(**new_config)
+
 
 matcher = re.compile(r"(?:\{\{)([a-zA-Z\.]+)(?:\}\})")
 replacer = "{0.\\1}"
@@ -61,7 +66,3 @@ class Client:
 
     def run(self):
         self.bot.run(self.config["token"])
-
-
-
-
