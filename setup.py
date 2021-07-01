@@ -7,8 +7,8 @@ with open("requirements.txt", "r", encoding="utf-8") as req_file:
     requirements = req_file.readlines()
 
 setuptools.setup(
-    name="instant-api-client",
-    version="0.1.2",
+    name="discord-lib",
+    version="0.0.1",
     author="Swas.py",
     license="MIT",
     description="Create discord.py clients from XML, JSON, yaml etc",
