@@ -60,7 +60,7 @@ class Client:
     def __init__(self, bot_data: Dict):
         self.bot_data = bot_data
         self.config = self.bot_data.get("config")
-        self.commands = self.bot_data.get("config")
+        self.commands = self.bot_data.get("commands")
         self.bot = build_bot_from_config(self.config)
         add_commands(self.bot, self.commands)
 
