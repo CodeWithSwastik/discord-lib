@@ -1,7 +1,7 @@
 import re
 from typing import Dict, List
 
-from discord import Intents, Game, Activity, Streaming, ActivityType
+from discord import Intents, Game, Activity, Streaming, ActivityType, AllowedMentions
 from discord.ext.commands import (
     Bot,
     Command,
@@ -11,6 +11,7 @@ from discord.ext.commands import (
 )
 
 from .action import Action
+
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -48,10 +49,21 @@ def build_bot_from_config(config: Dict) -> Bot:
         else:
             activity = Game(name=text)
         new_config["activity"] = activity
+
+    if allowed_input := (config.get("allowed_mentions")):
+        allowed = AllowedMentions.none()
+
+        if isinstance(allowed_input, str):
+            if allowed_input == "all":
+                allowed = AllowedMentions.all()
+        else:
+            for f in allowed_input:
+                setattr(allowed, f, True)
+        new_config["allowed_mentions"] = allowed
     return Bot(**new_config)
 
 
-matcher = re.compile(r"(?:\{\{)([a-zA-Z\.]+)(?:\}\})")
+matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
 replacer = "{0.\\1}"
 
 
@@ -61,10 +73,14 @@ def add_commands(bot: Bot, command_configs: List[Dict]):
 
 
 def create_command(command_config: Dict) -> Command:
-    async def command(ctx: Context):
+    defined_args = command_config.get("args", [])
+
+    async def command(ctx: Context, *args):
+        for i, arg in enumerate(defined_args):
+            setattr(ctx, arg, args[i])
+
         if action := command_config.get("action"):
             Action(action, namespace=ctx).execute()
-
 
         if resp := command_config.get("response"):
             response = matcher.sub(replacer, resp)

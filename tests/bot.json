@@ -7,7 +7,8 @@
     "presence": {
       "type": "listening",
       "text": "discord.json <3"
-    }
+    },
+    "allowed_mentions": ["users", "replied_user"]
   },
   "events": [
     {
@@ -29,7 +30,7 @@
           "value": "round({{bot.latency}} * 1000)"
         }
       },
-      "reply": "Pong! {{latency}}ms"
+      "reply": "Pong :ping_pong: {{latency}}ms"
     },
     {
       "name": "hi",
@@ -37,18 +38,9 @@
       "response": "Hi, {{author.mention}} I am a bot that was made in discord.json (powered by discord-lib)"
     },
     {
-      "name": "test",
-      "action": {
-        "type": "store",
-        "name": "result",
-        "data": {
-          "type": "conditional",
-          "condition": "1>2",
-          "true": "It was true",
-          "false": "It was false"
-        }
-      },
-      "response": "Test {{result}}"
+      "name": "repeat",
+      "args": ["num1"],
+      "response": "{{num1}}"
     }
   ]
 }

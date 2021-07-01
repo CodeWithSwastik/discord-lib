@@ -1,13 +1,14 @@
 import re
 
+
 class Action:
-    def __init__(self, action_config, namespace = None):
+    def __init__(self, action_config, namespace=None):
         self.action_config = action_config
         self.namespace = namespace
         self.setup()
 
     def setup(self):
-        matcher = re.compile(r"(?:\{\{)([a-zA-Z\.]+)(?:\}\})")
+        matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
         replacer = "{0.\\1}"
 
         for config in self.action_config:
@@ -18,23 +19,24 @@ class Action:
 
     def execute(self):
 
-
-        if self.type == "log": 
+        if self.type == "log":
             print(self.action_eval(self.value))
         elif self.type == "conditional":
             if eval(self.condition):
-                print("test")
                 return self.action_eval(self.true)
             else:
                 return self.action_eval(self.false)
         elif self.type == "store":
-            setattr(self.namespace,self.action_eval(self.name),self.action_eval(self.data))
+            setattr(
+                self.namespace, self.action_eval(self.name), self.action_eval(self.data)
+            )
         elif self.type == "multi":
             for action_config in self.value:
                 self.action_eval(action_config)
         elif self.type == "math":
             return eval(self.action_eval(self.value))
-    def action_eval(self,f):
+
+    def action_eval(self, f):
         if isinstance(f, dict):
             return Action(f, namespace=self.namespace).execute()
         else:
