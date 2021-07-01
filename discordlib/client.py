@@ -74,13 +74,29 @@ def create_command(command_config: Dict) -> Command:
     )
 
 
+def add_listeners(bot: Bot, event_configs: List[Dict]):
+    for event_config in event_configs:
+        bot.add_listener(*create_event(event_config))
+
+
+def create_event(event_config: Dict):
+    async def event(*args, **kwargs):
+        if action := event_config.get("action"):
+            if action["type"] == "log":
+                print(action["value"])
+
+    return (event, event_config["name"])
+
+
 class Client:
     def __init__(self, bot_data: Dict):
         self.bot_data = bot_data
         self.config = self.bot_data.get("config")
         self.commands = self.bot_data.get("commands")
+        self.events = self.bot_data.get("events")
         self.bot = build_bot_from_config(self.config)
         add_commands(self.bot, self.commands)
+        add_listeners(self.bot, self.events)
 
     def run(self):
         self.bot.run(self.config["token"])
