@@ -1,6 +1,6 @@
 {
   "config": {
-    "token": "NzI2NjU1OTQ4MzAyODQzOTM0.XvgdFg.aZ6TjJF0FCNuFjhy9Fi8wUm5mSg",
+    "token": "",
     "prefixes": ["{{when_mentioned}}", ">"],
     "case_sensitive": false,
     "owner": 556119013298667520
