@@ -26,4 +26,5 @@ with open("bot.json", "r") as f:
     e = json.load(f)
     config = e.get("config")
     bot = bot_from_config(config)
-    bot.run(config["token"])
+    
+bot.run(config["token"])
