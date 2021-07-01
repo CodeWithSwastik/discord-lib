@@ -1,7 +1,7 @@
 import re
 from typing import Dict, List
 
-from discord import Intents
+from discord import Intents, Game, Activity, Streaming, ActivityType
 from discord.ext.commands import (
     Bot,
     Command,
@@ -15,7 +15,9 @@ def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
 
     def get_prefix(bot, msg):
-        prefixes = [config.get("prefix")] or config.get("prefixes")
+        prefixes = config.get("prefix") or config.get("prefixes")
+        if not isinstance(prefixes, list):
+            prefixes = [prefixes]
         if prefixes:
             mentioned = "{{when_mentioned}}"
             if mentioned in prefixes:
@@ -32,7 +34,19 @@ def build_bot_from_config(config: Dict) -> Bot:
     new_config["intents"] = (
         Intents.all() if config.get("intents") == "all" else Intents.default()
     )
+    if presence_data := (config.get("presence") or config.get("activity")):
+        presence_type = presence_data.get("type", "playing")
+        text = presence_data.get("text")
 
+        if presence_type == "watching":
+            activity = Activity(type=ActivityType.watching, name=text)
+        elif presence_type == "listening":
+            activity = Activity(type=ActivityType.listening, name=text)
+        elif presence_type == "streaming":
+            activity = Streaming(name=text, url=presence_data.get("url"))
+        else:
+            activity = Game(name=text)
+        new_config["activity"] = activity
     return Bot(**new_config)
 
 

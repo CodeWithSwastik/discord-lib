@@ -3,7 +3,11 @@
     "token": "",
     "prefixes": ["{{when_mentioned}}", ">"],
     "case_sensitive": false,
-    "owner": 556119013298667520
+    "owner": 556119013298667520,
+    "presence": {
+      "type": "watching",
+      "text": "discord.json <3"
+    }
   },
   "events": [
     {
