@@ -21,7 +21,15 @@
   "commands": [
     {
       "name": "ping",
-      "reply": "Pong! {{bot.latency}}ms"
+      "action": {
+        "type": "store",
+        "name": "latency",
+        "data": {
+          "type": "math",
+          "value": "round({{bot.latency}} * 1000)"
+        }
+      },
+      "reply": "Pong! {{latency}}ms"
     },
     {
       "name": "hi",
