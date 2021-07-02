@@ -1,6 +1,8 @@
 config:
   token: ""
   prefixes: [">", "{{when_mentioned}}"]
+  include:
+    - "jishaku"
 
 events:
   - name: "on_ready"

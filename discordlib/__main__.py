@@ -1,6 +1,7 @@
 from sys import argv
 from .client import Client
 
+
 def main():
     if len(argv) <= 1:
         print("Please enter a file to run!")
@@ -9,5 +10,6 @@ def main():
         bot = Client(fp)
         bot.run()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -2,7 +2,15 @@ import os
 import re
 from typing import Dict, List
 
-from discord import Intents, Game, Activity, Streaming, ActivityType, AllowedMentions, Embed
+from discord import (
+    Intents,
+    Game,
+    Activity,
+    Streaming,
+    ActivityType,
+    AllowedMentions,
+    Embed,
+)
 from discord.ext.commands import (
     Bot,
     Command,
@@ -12,6 +20,7 @@ from discord.ext.commands import (
 )
 
 from .action import Action
+
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -51,7 +60,7 @@ def build_bot_from_config(config: Dict) -> Bot:
             activity = Game(name=text)
         new_config["activity"] = activity
 
-    allowed_input = (config.get("allowed_mentions"))
+    allowed_input = config.get("allowed_mentions")
     if allowed_input:
         allowed = AllowedMentions.none()
 
@@ -62,7 +71,20 @@ def build_bot_from_config(config: Dict) -> Bot:
             for f in allowed_input:
                 setattr(allowed, f, True)
         new_config["allowed_mentions"] = allowed
-    return Bot(**new_config)
+
+    bot = Bot(**new_config)
+
+    if "jishaku" in config.get("include", []):
+        try:
+            bot.load_extension("jishaku")
+        except Exception:
+            raise ModuleNotFoundError(
+                "Unable to use jishaku. "
+                "jishaku is required if you want to include it, install using\n"
+                "pip install jishaku"
+            )
+
+    return bot
 
 
 matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
@@ -150,9 +172,11 @@ class Client:
             _, filetype = os.path.splitext(fp)
             if filetype == ".json":
                 import json
+
                 result = json.load(f)
             elif filetype == ".xml":
                 from .utils import parse_xml_to_dict
+
                 result = parse_xml_to_dict(f)
             elif filetype == ".yaml":
                 try:
