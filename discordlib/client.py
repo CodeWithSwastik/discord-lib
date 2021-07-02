@@ -1,5 +1,4 @@
 import os
-import re
 from typing import Dict, List
 
 from discord import (
@@ -20,7 +19,7 @@ from discord.ext.commands import (
 )
 
 from .action import Action
-
+from .utils import apply_func_to_all_strings, spformat
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -87,10 +86,6 @@ def build_bot_from_config(config: Dict) -> Bot:
     return bot
 
 
-matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
-replacer = "{0.\\1}"
-
-
 def add_commands(bot: Bot, command_configs: List[Dict]):
     for command_config in command_configs:
         bot.add_command(create_command(command_config))
@@ -98,27 +93,27 @@ def add_commands(bot: Bot, command_configs: List[Dict]):
 
 def create_command(command_config: Dict) -> Command:
     defined_args = command_config.get("args", [])
-
     async def command(ctx: Context, *args):
+        def fill(string):
+            return spformat(string, ctx)
+        local_command_config = apply_func_to_all_strings(command_config, fill)
         for i, arg in enumerate(defined_args):
             if arg.startswith("*"):
                 setattr(ctx, arg[1:], " ".join(args[i:]))
                 break
             setattr(ctx, arg, args[i])
 
-        action = command_config.get("action")
+        action = local_command_config.get("action")
         if action:
             Action(action, namespace=ctx).execute()
 
-        resp = command_config.get("response")
+        resp = local_command_config.get("response")
         if resp:
-            response = matcher.sub(replacer, resp)
-            await ctx.send(response.format(ctx))
-        rep = command_config.get("reply")
+            await ctx.send(fill(resp))
+        rep = local_command_config.get("reply")
         if rep:
-            reply = matcher.sub(replacer, rep)
-            await ctx.reply(reply.format(ctx))
-        embed = command_config.get("embed")
+            await ctx.reply(fill(rep))
+        embed = local_command_config.get("embed")
         if embed:
             final_embed = Embed.from_dict(embed)
             await ctx.send(embed=final_embed)
@@ -198,7 +193,7 @@ class Client:
                     raise ModuleNotFoundError(
                         "Unable to import yaml. "
                         "xmltodict is required for using yaml files, install using\n"
-                        "pip install yaml"
+                        "pip install PyYAML"
                     )
                 result = yaml.safe_load(f)
             else:

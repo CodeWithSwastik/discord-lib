@@ -12,6 +12,9 @@ events:
 
 commands:
   - name: "ping"
-    response: "Pong!"
+    embed:
+      title: "Pong! :ping_pong:"
+      description: "`Bot Latency is <<{{bot.latency}}*1000>>ms`"
+      color: 15158332
   - name: "hi"
     reply: "Hi! I am a bot written in discord.yaml"
