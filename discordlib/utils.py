@@ -85,7 +85,7 @@ def spformat(string, namespace):
 
 
     # math nodes
-    matcher = re.compile(r"(?:<<)([0-9\. \+\-/\*]+)(?:>>)")
+    matcher = re.compile(r"(?:<<)([0-9\. \+\-/\*\(\)]+)(?:>>)")
 
     for match in re.findall(matcher,final):
         evaled_match = eval(match)
