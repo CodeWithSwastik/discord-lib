@@ -1,3 +1,4 @@
+import os
 import re
 from typing import Dict, List
 
@@ -11,7 +12,6 @@ from discord.ext.commands import (
 )
 
 from .action import Action
-
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -118,8 +118,11 @@ def create_event(event_config: Dict):
 
 
 class Client:
-    def __init__(self, bot_data: Dict):
-        self.bot_data = bot_data
+    def __init__(self, bot_data):
+        if isinstance(bot_data, str):
+            self.bot_data = self.load(bot_data)
+        else:
+            self.bot_data = bot_data
         self.config = self.bot_data.get("config")
         self.commands = self.bot_data.get("commands") or self.bot_data.get(
             "command", []
@@ -131,3 +134,20 @@ class Client:
 
     def run(self):
         self.bot.run(self.config["token"])
+
+    def load(self, fp) -> Dict:
+        with open(fp, "rb") as f:
+            _, filetype = os.path.splitext(fp)
+            if filetype == ".json":
+                import json
+                result = json.load(f)
+            elif filetype == ".xml":
+                from .utils import parse_xml_to_dict
+                result = parse_xml_to_dict(f)
+            elif filetype == ".yaml":
+                import yaml
+                result = yaml.safe_load(f)
+            else:
+                raise Exception("Unsupported filetype")
+
+        return result

@@ -1,0 +1,10 @@
+config:
+  token: ""
+  prefixes: [">", "{{when_mentioned}}"]
+
+event: [{ name: "on_ready", action: { type: "log", value: "Bot is ready" } }]
+commands:
+  [
+    { name: "ping", response: "Pong!" },
+    { name: "hi", reply: "Hi! I am a bot written in discord.yaml" },
+  ]
