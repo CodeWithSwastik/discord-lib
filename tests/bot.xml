@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
     <config>
-        <token>YOUR_TOKEN_HERE</token>
+        <token></token>
         <prefixes>{{when_mentioned}}</prefixes>
-        <prefixes>?</prefixes>
+        <prefixes>></prefixes>
         <caseSensitive>false</caseSensitive>
         <owner>556119013298667520</owner>
         <readyMessage>I'm ready!</readyMessage>
-        <ignoreDMs>true</ignoreDMs>
+        <ignoreDms>true</ignoreDms>
         <ignoreBots>true</ignoreBots>
+        <presence>
+            <type>listening </type>
+            <text>Discord.XML </text>
+        </presence>
     </config>
     <command>
             <name>ping</name>
             <aliases>pong</aliases>
-            <response>Pong!</response>
-            <type>all</type>
+            <response>Pong! {{bot.latency}}</response>
             <description>Replies "Pong!"</description>
     </command>
     <command>
             <name>best-framework</name>
             <response>Discord.XML</response>
-            <type>all</type>
             <description>Tells you the best framework: Discord.XML</description>
     </command>
 </root>

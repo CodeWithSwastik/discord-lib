@@ -77,8 +77,8 @@ def create_command(command_config: Dict) -> Command:
 
     async def command(ctx: Context, *args):
         for i, arg in enumerate(defined_args):
-            if arg.startswith('*'):
-                setattr(ctx, arg[1:], ' '.join(args[i:]))
+            if arg.startswith("*"):
+                setattr(ctx, arg[1:], " ".join(args[i:]))
                 break
             setattr(ctx, arg, args[i])
 
@@ -92,10 +92,15 @@ def create_command(command_config: Dict) -> Command:
             reply = matcher.sub(replacer, rep)
             await ctx.reply(reply.format(ctx))
 
+    aliases = command_config.get("aliases", [])
+    if isinstance(aliases, str):
+        aliases = [aliases]
+
     return Command(
-        command, **command_config
-        #name=command_config["name"], aliases=command_config.get("aliases", []),
-        #description=command_config.get("description","")
+        command,
+        name=command_config["name"],
+        aliases=aliases,
+        description=command_config.get("description", ""),
     )
 
 
@@ -116,8 +121,10 @@ class Client:
     def __init__(self, bot_data: Dict):
         self.bot_data = bot_data
         self.config = self.bot_data.get("config")
-        self.commands = self.bot_data.get("commands")
-        self.events = self.bot_data.get("events")
+        self.commands = self.bot_data.get("commands") or self.bot_data.get(
+            "command", []
+        )
+        self.events = self.bot_data.get("events") or self.bot_data.get("event", [])
         self.bot = build_bot_from_config(self.config)
         add_commands(self.bot, self.commands)
         add_listeners(self.bot, self.events)
