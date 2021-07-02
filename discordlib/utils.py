@@ -21,30 +21,16 @@ def change_case_for_dict_keys(dictionary):
     return new_dict
 
 
-def convert_string_bools_to_bools(dictionary):
-    new_dict = {}
-    for key in dictionary:
-        if isinstance(dictionary[key], dict):
-            dictionary[key] = convert_string_bools_to_bools(dictionary[key])
-        elif isinstance(dictionary[key], list):
-            for value in dictionary[key]:
-                if isinstance(value, dict):
-                    dictionary[key].remove(value)
-                    dictionary[key].append(convert_string_bools_to_bools(value))
-                elif isinstance(value, str):
-                    if value.lower() == "true":
-                        value = True
-                    elif value.lower() == "false":
-                        value = False
-        elif isinstance(dictionary[key], str):
-            if dictionary[key].lower() == "true":
-                dictionary[key] = True
-            elif dictionary[key].lower() == "false":
-                dictionary[key] = False
-        new_dict[key] = dictionary[key]
-
-    return new_dict
-
+def convert_string_bools_to_bools(item):
+    if isinstance(item, dict):
+        return {key:convert_string_bools_to_bools(value) for key, value in item.items()}
+    if isinstance(item, list):
+        return [convert_string_bools_to_bools(element) for element in item]
+    if isinstance(item, str):
+        return {"false": False, "true": True}.get(item.lower(), item)
+    if item is None:
+        return ""
+    raise RuntimeError
 
 def parse_xml_to_dict(xml_bytes):
     try:
