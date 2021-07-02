@@ -11,6 +11,11 @@ with open("README.md", "r", encoding="utf-8") as readme_file:
 with open("requirements.txt", "r", encoding="utf-8") as req_file:
     requirements = req_file.readlines()
 
+extras_require = {
+    'xml': ['xmltodict'],
+    'yaml': ['PyYAML'],
+}
+
 setuptools.setup(
     name="discord-lib",
     version=version,
@@ -22,6 +27,7 @@ setuptools.setup(
     url="https://github.com/CodeWithSwastik/discord-lib",
     packages=["discordlib"],
     install_requires=requirements,
+    extras_require=extras_require,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Intended Audience :: Developers",
