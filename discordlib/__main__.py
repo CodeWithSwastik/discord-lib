@@ -1,15 +1,15 @@
-from sys import argv
+from argparse import ArgumentParser
+from pathlib import Path
+
 from .client import Client
 
-
 def main():
-    if len(argv) <= 1:
-        print("Please enter a file to run!")
-    else:
-        fp = argv[1]
-        bot = Client(fp)
-        bot.run()
+    parser = ArgumentParser("discord-lib")
+    parser.add_argument("filename", type=Path)
+    args = parser.parse_args()
+    fp = args.filename
+    bot = Client(str(fp))
+    bot.run()
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
