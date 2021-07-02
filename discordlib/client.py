@@ -178,7 +178,7 @@ class Client:
                 load_dotenv()
             self.config["token"] = os.getenv("TOKEN") or os.getenv("token")
             print(self.config["token"])
-            print(os.getcwd())
+            print(os.getcwd(), os.listdir())
         self.bot.run(self.config["token"])
 
     def load(self, fp) -> Dict:
