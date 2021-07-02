@@ -36,7 +36,8 @@ def build_bot_from_config(config: Dict) -> Bot:
     new_config["intents"] = (
         Intents.all() if config.get("intents") == "all" else Intents.default()
     )
-    if presence_data := (config.get("presence") or config.get("activity")):
+    presence_data = config.get("presence") or config.get("activity")
+    if presence_data:
         presence_type = presence_data.get("type", "playing")
         text = presence_data.get("text")
 
@@ -50,7 +51,8 @@ def build_bot_from_config(config: Dict) -> Bot:
             activity = Game(name=text)
         new_config["activity"] = activity
 
-    if allowed_input := (config.get("allowed_mentions")):
+    allowed_input = (config.get("allowed_mentions"))
+    if allowed_input:
         allowed = AllowedMentions.none()
 
         if isinstance(allowed_input, str):
@@ -82,13 +84,16 @@ def create_command(command_config: Dict) -> Command:
                 break
             setattr(ctx, arg, args[i])
 
-        if action := command_config.get("action"):
+        action = command_config.get("action")
+        if action:
             Action(action, namespace=ctx).execute()
 
-        if resp := command_config.get("response"):
+        resp = command_config.get("response")
+        if resp:
             response = matcher.sub(replacer, resp)
             await ctx.send(response.format(ctx))
-        if rep := command_config.get("reply"):
+        rep = command_config.get("reply")
+        if rep:
             reply = matcher.sub(replacer, rep)
             await ctx.reply(reply.format(ctx))
 
@@ -111,7 +116,8 @@ def add_listeners(bot: Bot, event_configs: List[Dict]):
 
 def create_event(event_config: Dict):
     async def event(*args, **kwargs):
-        if action := event_config.get("action"):
+        action = event_config.get("action")
+        if action:
             Action(action).execute()
 
     return (event, event_config["name"])
@@ -145,7 +151,14 @@ class Client:
                 from .utils import parse_xml_to_dict
                 result = parse_xml_to_dict(f)
             elif filetype == ".yaml":
-                import yaml
+                try:
+                    import yaml
+                except ModuleNotFoundError:
+                    raise ModuleNotFoundError(
+                        "Unable to import yaml. "
+                        "xmltodict is required for using yaml files, install using\n"
+                        "pip install yaml"
+                    )
                 result = yaml.safe_load(f)
             else:
                 raise Exception("Unsupported filetype")

@@ -1,4 +1,3 @@
-import xmltodict
 import json
 
 
@@ -48,6 +47,14 @@ def convert_string_bools_to_bools(dictionary):
 
 
 def parse_xml_to_dict(xml_bytes):
+    try:
+        import xmltodict
+    except ModuleNotFoundError:
+        raise ModuleNotFoundError(
+            "Unable to import xmltodict. "
+            "xmltodict is required for using xml files, install using\n"
+            "pip install xmltodict"
+        )
     parsed_xml = xmltodict.parse(xml_bytes)
     parsed_xml = json.loads(json.dumps(parsed_xml))
     final_dict = convert_string_bools_to_bools(change_case_for_dict_keys(parsed_xml))
