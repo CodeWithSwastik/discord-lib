@@ -2,7 +2,7 @@ import os
 import re
 from typing import Dict, List
 
-from discord import Intents, Game, Activity, Streaming, ActivityType, AllowedMentions
+from discord import Intents, Game, Activity, Streaming, ActivityType, AllowedMentions, Embed
 from discord.ext.commands import (
     Bot,
     Command,
@@ -96,6 +96,10 @@ def create_command(command_config: Dict) -> Command:
         if rep:
             reply = matcher.sub(replacer, rep)
             await ctx.reply(reply.format(ctx))
+        embed = command_config.get("embed")
+        if embed:
+            final_embed = Embed.from_dict(embed)
+            await ctx.send(embed=final_embed)
 
     aliases = command_config.get("aliases", [])
     if isinstance(aliases, str):
