@@ -19,7 +19,7 @@ from discord.ext.commands import (
 )
 
 from .action import Action
-from .utils import apply_func_to_all_strings, spformat
+from .utils import apply_func_to_all_strings, spformat, change_case_for_dict_keys
 
 def build_bot_from_config(config: Dict) -> Bot:
     new_config = {}
@@ -199,4 +199,4 @@ class Client:
             else:
                 raise Exception("Unsupported filetype")
 
-        return result
+        return change_case_for_dict_keys(result)
