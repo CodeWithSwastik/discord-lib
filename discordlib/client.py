@@ -93,7 +93,9 @@ def create_command(command_config: Dict) -> Command:
             await ctx.reply(reply.format(ctx))
 
     return Command(
-        command, name=command_config["name"], aliases=command_config.get("aliases", [])
+        command, **command_config
+        #name=command_config["name"], aliases=command_config.get("aliases", []),
+        #description=command_config.get("description","")
     )
 
 

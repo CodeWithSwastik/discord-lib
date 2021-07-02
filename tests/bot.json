@@ -22,6 +22,7 @@
   "commands": [
     {
       "name": "ping",
+      "description": "Shows the bot latency",
       "action": {
         "type": "store",
         "name": "latency",
