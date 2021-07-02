@@ -1,4 +1,4 @@
-# discord-lib 0.0.3
+# discord-lib 0.0.4
 
 discord-lib currently supports discord bots written in JSON, XML and yaml. It will soon support toml, etc
 

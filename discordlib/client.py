@@ -177,8 +177,7 @@ class Client:
             else:
                 load_dotenv(dotenv_path=os.path.join(os.getcwd(),".env"))
             self.config["token"] = os.getenv("TOKEN") or os.getenv("token")
-            print(self.config["token"])
-            print(os.getcwd(), os.listdir())
+
         self.bot.run(self.config["token"])
 
     def load(self, fp) -> Dict:
