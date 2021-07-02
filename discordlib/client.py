@@ -165,6 +165,20 @@ class Client:
         add_listeners(self.bot, self.events)
 
     def run(self):
+        if self.config["token"] == "{{env.token}}":
+            try:
+                from dotenv import load_dotenv
+            except ImportError:
+                raise ModuleNotFoundError(
+                    "Unable to import dotenv. "
+                    "dotenv is required for using env files, install using\n"
+                    "pip install python-dotenv"
+                )
+            else:
+                load_dotenv()
+            self.config["token"] = os.getenv("TOKEN") or os.getenv("token")
+            print(self.config["token"])
+            print(os.getcwd())
         self.bot.run(self.config["token"])
 
     def load(self, fp) -> Dict:

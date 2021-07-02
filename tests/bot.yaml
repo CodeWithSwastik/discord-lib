@@ -1,5 +1,5 @@
 config:
-  token: ""
+  token: "{{env.token}}"
   prefixes: [">", "{{when_mentioned}}"]
   include:
     - "jishaku"
