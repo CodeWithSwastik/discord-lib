@@ -90,7 +90,7 @@ def add_cogs(bot: Bot, cog_configs: List[Dict]):
     for cog_config in cog_configs:
         bot.add_cog(create_cog(cog_config, bot))
 
-def create_cog(cog_config, bot):
+def create_cog(cog_config, bot) -> Cog:
     
     cog = Cog(name=cog_config['config']['name'], description=cog_config['config'].get('description',''))
     add_commands(bot, cog_config.get('commands',cog_config.get('command',[])), cog)
