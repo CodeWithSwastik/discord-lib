@@ -70,6 +70,7 @@ def apply_func_to_all_strings(dictionary_or_list, func):
 def spformat(string, namespace):
     matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
     replacer = "{0.\\1}"
+    final = string
     try:
         final = matcher.sub(replacer, string).format(namespace)
     except AttributeError:
