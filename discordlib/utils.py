@@ -8,7 +8,7 @@ def change_case(string):
 def change_case_for_dict_keys(dictionary):
     if dictionary is None: 
         return {}
-        
+
     new_dict = {}
     for key in dictionary:
         if isinstance(dictionary[key], dict):
@@ -70,8 +70,10 @@ def apply_func_to_all_strings(dictionary_or_list, func):
 def spformat(string, namespace):
     matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
     replacer = "{0.\\1}"
-    final = matcher.sub(replacer, string).format(namespace)
-
+    try:
+        final = matcher.sub(replacer, string).format(namespace)
+    except AttributeError:
+        pass
 
     # math nodes
     matcher = re.compile(r"(?:<<)([0-9\. \+\-/\*\(\)]+)(?:>>)")
