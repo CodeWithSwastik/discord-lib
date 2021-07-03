@@ -1,5 +1,5 @@
 import re
-
+import random
 
 class Action:
     def __init__(self, action_config, namespace=None):
@@ -35,6 +35,13 @@ class Action:
                 self.action_eval(action_config)
         elif self.type == "math":
             return eval(self.action_eval(self.value))
+        elif self.type == "random":
+            if hasattr(self,"choice"):
+                return random.choice(self.choice)
+            elif hasattr(self,"range"):
+                return random.randint(int(self.range[0]), int(self.range[1]))
+
+
 
     def action_eval(self, f):
         if isinstance(f, dict):
