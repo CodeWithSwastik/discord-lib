@@ -15,7 +15,7 @@ pythom -m discordlib [filepath]
 ```
 
 ### Code
-```
+```python
 from discordlib import Client
 
 client = Client("filepath")
