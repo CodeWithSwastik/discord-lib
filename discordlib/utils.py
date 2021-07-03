@@ -70,11 +70,19 @@ def apply_func_to_all_strings(dictionary_or_list, func):
 def spformat(string, namespace):
     matcher = re.compile(r"(?:\{\{)([a-zA-Z0-9\.]+)(?:\}\})")
     replacer = "{0.\\1}"
-    final = string
-    try:
-        final = matcher.sub(replacer, string).format(namespace)
-    except AttributeError:
-        pass
+
+    final = matcher.sub(replacer, string)
+    if '}' in final:
+        new_final = '' 
+        d = "}"
+        f = final.split(d)
+        spilt_final = [e+d if e and i != len(f)-1 else e for i,e in enumerate(f) ]
+        for sub in spilt_final:
+            try:
+                new_final += sub.format(namespace)
+            except AttributeError:
+                new_final += sub
+        final = new_final
 
     # math nodes
     matcher = re.compile(r"(?:<<)([0-9\. \+\-/\*\(\)]+)(?:>>)")

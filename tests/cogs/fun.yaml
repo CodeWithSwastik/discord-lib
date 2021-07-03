@@ -5,3 +5,16 @@ config:
 commands:
   - name: wow
     reply: hehe
+  - name: sus
+    args:
+      - target
+    action:
+      type: store
+      name: res
+      data:
+        type: random
+        range: [0, 100]
+    embed:
+      title: "Sus-o-meter :thermometer:"
+      description: "{{target}} is `{{res}}%` sus"
+      color: 15277667

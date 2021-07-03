@@ -105,18 +105,18 @@ def add_commands(bot: Bot, command_configs: List[Dict], cog = None):
 def create_command(command_config: Dict, cog) -> Command:
     defined_args = command_config.get("args", [])
     async def command(ctx: Context, *args):
-        def fill(string):
-            return spformat(string, ctx)
-        local_command_config = apply_func_to_all_strings(command_config, fill)
         for i, arg in enumerate(defined_args):
             if arg.startswith("*"):
                 setattr(ctx, arg[1:], " ".join(args[i:]))
                 break
             setattr(ctx, arg, args[i])
-
+        def fill(string):
+            return spformat(string, ctx)
+        local_command_config = apply_func_to_all_strings(command_config, fill)
         action = local_command_config.get("action")
         if action:
             Action(action, namespace=ctx).execute()
+        local_command_config = apply_func_to_all_strings(command_config, fill)
 
         resp = local_command_config.get("response")
         if resp:
