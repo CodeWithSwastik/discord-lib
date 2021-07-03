@@ -3,7 +3,7 @@ config:
   prefixes: [">", "{{when_mentioned}}"]
   include:
     - "jishaku"
-
+  cogs: tests/cogs
 events:
   - name: "on_ready"
     action:

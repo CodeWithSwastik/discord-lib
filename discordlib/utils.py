@@ -6,6 +6,9 @@ def change_case(string):
 
 
 def change_case_for_dict_keys(dictionary):
+    if dictionary is None: 
+        return {}
+        
     new_dict = {}
     for key in dictionary:
         if isinstance(dictionary[key], dict):

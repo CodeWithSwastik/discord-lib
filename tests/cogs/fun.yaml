@@ -1,0 +1,7 @@
+config:
+  type: cog
+  name: Fun
+
+commands:
+  - name: wow
+    reply: hehe

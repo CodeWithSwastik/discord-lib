@@ -14,6 +14,7 @@ from discord.ext.commands import (
     Bot,
     Command,
     Context,
+    Cog,
     when_mentioned,
     when_mentioned_or,
 )
@@ -85,13 +86,23 @@ def build_bot_from_config(config: Dict) -> Bot:
 
     return bot
 
+def add_cogs(bot: Bot, cog_configs: List[Dict]):
+    for cog_config in cog_configs:
+        bot.add_cog(create_cog(cog_config, bot))
 
-def add_commands(bot: Bot, command_configs: List[Dict]):
+def create_cog(cog_config, bot):
+    
+    cog = Cog(name=cog_config['config']['name'], description=cog_config['config'].get('description',''))
+    add_commands(bot, cog_config.get('commands',cog_config.get('command',[])), cog)
+    #add_listeners(bot, cog_config.get('events',cog_config.get('event',[])), cog)
+    return cog
+
+def add_commands(bot: Bot, command_configs: List[Dict], cog = None):
     for command_config in command_configs:
-        bot.add_command(create_command(command_config))
+        bot.add_command(create_command(command_config,cog))
 
 
-def create_command(command_config: Dict) -> Command:
+def create_command(command_config: Dict, cog) -> Command:
     defined_args = command_config.get("args", [])
     async def command(ctx: Context, *args):
         def fill(string):
@@ -127,6 +138,7 @@ def create_command(command_config: Dict) -> Command:
         name=command_config["name"],
         aliases=aliases,
         description=command_config.get("description", ""),
+        cog=cog
     )
 
 
@@ -158,6 +170,7 @@ class Client:
         self.bot = build_bot_from_config(self.config)
         add_commands(self.bot, self.commands)
         add_listeners(self.bot, self.events)
+        self.load_extensions()
 
     def run(self):
         if self.config["token"] == "{{env.token}}":
@@ -175,9 +188,10 @@ class Client:
 
         self.bot.run(self.config["token"])
 
-    def load(self, fp) -> Dict:
+    def load(self,fp) -> Dict:
         with open(fp, "rb") as f:
             _, filetype = os.path.splitext(fp)
+            self.filetype = filetype
             if filetype == ".json":
                 import json
 
@@ -186,7 +200,7 @@ class Client:
                 from .utils import parse_xml_to_dict
 
                 result = parse_xml_to_dict(f)
-            elif filetype == ".yaml":
+            elif filetype in (".yaml", ".yml"):
                 try:
                     import yaml
                 except ModuleNotFoundError:
@@ -200,3 +214,24 @@ class Client:
                 raise Exception("Unsupported filetype")
 
         return change_case_for_dict_keys(result)
+
+    def load_extensions(self):
+        cogs = self.config.get("cogs")
+        self.cog_configs = []
+        if isinstance(cogs,str):
+            cog_path = os.path.join(os.getcwd(), cogs)
+            for cog in os.listdir(cog_path):
+                if self.filetype == os.path.splitext(cog)[-1]:
+                    cog_config = self.load(os.path.join(cog_path, cog))
+                    if cog_config.get('config',{}).get('type', '') != 'cog':
+                        raise Exception(f"{cog} doesn't specify a type. In order to load it as a cog, specify type: cog")
+                    self.cog_configs.append(cog_config)
+        elif isinstance(cogs,list):
+            for cog in cogs:
+                if self.filetype == os.path.splitext(cog)[-1]:
+                    cog_config = self.load(cog)
+                    if cog_config.get('config',{}).get('type', '') != 'cog':
+                        raise Exception(f"{cog} doesn't specify a type. In order to load it as a cog, specify type: cog")                    
+                    self.cog_configs.append(cog_config)
+
+        add_cogs(self.bot,self.cog_configs)
